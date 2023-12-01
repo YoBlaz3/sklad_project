@@ -107,12 +107,9 @@ def delete(book_id):
         db.session.commit()
         db.session.delete(book)
         db.session.commit()
-        try:
-            img = Cover.query.filter_by(book_id=book_id).first()
-            img_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'media', 'images', img.storage_filename)
-            os.remove(img_path)
-        except:
-            pass
+        img = Cover.query.filter_by(book_id=book_id).first()
+        img_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'media', 'images', img.storage_filename)
+        os.remove(img_path)
         flash(f'Книга успешно удалена!', 'success')
         return redirect(url_for('index'))
 
