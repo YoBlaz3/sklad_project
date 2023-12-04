@@ -4,8 +4,7 @@ from app import app, db, migrate
 
 class AppTestCase(unittest.TestCase):
     def setUp(self):
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        app.config.from_pyfile('config.py')
         self.app = app.test_client()
         with app.app_context():
             db.create_all()
@@ -15,7 +14,6 @@ class AppTestCase(unittest.TestCase):
         with app.app_context():
             db.session.remove()
             db.drop_all()
-
     def test_index_route(self):
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
