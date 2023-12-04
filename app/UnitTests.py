@@ -7,7 +7,7 @@ from flask_testing import TestCase
 class AppTestCase(unittest.TestCase):
     def setUp(self):
         app.config['TESTING'] = True
-        app.config.from_pyfile('config.py)
+        app.config.from_pyfile('config.py')
         self.app = app.test_client()
         with app.app_context():
             db.create_all()
