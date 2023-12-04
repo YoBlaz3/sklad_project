@@ -1,10 +1,13 @@
 import unittest
 from flask import Flask
 from app import app, db, migrate
+from models import Book, Genre, Book_Genre
+from flask_testing import TestCase
 
 class AppTestCase(unittest.TestCase):
     def setUp(self):
-        app.config.from_pyfile('config.py')
+        app.config['TESTING'] = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
         self.app = app.test_client()
         with app.app_context():
             db.create_all()
@@ -14,6 +17,7 @@ class AppTestCase(unittest.TestCase):
         with app.app_context():
             db.session.remove()
             db.drop_all()
+
     def test_index_route(self):
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
@@ -36,5 +40,13 @@ class AppTestCase(unittest.TestCase):
         response = self.app.get('/journal')
         self.assertEqual(response.status_code, 302)  # Должно перенаправлять на страницу входа при отсутствии аутентификации
 
+    def test_new_book_route(self):
+        response = self.app.get('/book/new')
+        self.assertEqual(response.status_code, 302)
+
+    def test_error_route(self):
+        response = self.app.get('/error_route')
+        self.assertEqual(response.status_code, 404)
+    
 if __name__ == '__main__':
     unittest.main()
