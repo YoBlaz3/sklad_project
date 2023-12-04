@@ -7,16 +7,11 @@ from flask_testing import TestCase
 class AppTestCase(unittest.TestCase):
     def setUp(self):
         app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+        app.config.from_pyfile('config.py)
         self.app = app.test_client()
         with app.app_context():
             db.create_all()
             migrate.init_app(app, db)
-
-    def tearDown(self):
-        with app.app_context():
-            db.session.remove()
-            db.drop_all()
 
     def test_index_route(self):
         response = self.app.get('/')
