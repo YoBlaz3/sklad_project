@@ -25,6 +25,10 @@ services:
       - DATABASE_HOST=database    ## Container name of Mysql
       - DATABASE_PORT=3306
       - MYSQL_ROOT_PASSWORD=root
-
+  unittest:
+    build: .
+    command: ["python", "-m", "unittest", "app/test_my_app.py"]
+    volumes:
+    - .:/app
 volumes:
   sklad:
