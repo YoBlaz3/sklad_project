@@ -28,7 +28,7 @@ services:
   unittest:
     image: tests
     build: .
-    command: ["python", "-m", "unittest", "app/test_my_app.py"]
+    command: ["python", "-m", "unittest", "myapp/test_my_app.py"]
     volumes:
       - .:/app
 volumes:
