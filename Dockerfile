@@ -6,3 +6,4 @@ ENV FLASK_APP=/myapp/app/app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 EXPOSE 5000
 CMD [ "python3", "-m" , "flask", "run" ] 
+CMD [ "python", "/myapp/app/test_my_app.py" ] 
