@@ -27,9 +27,12 @@ services:
       - MYSQL_ROOT_PASSWORD=root
   unittest:
     image: tests
+    container_name: tests
     build: .
-    command: ["python", "-m", "unittest", "myapp/test_my_app.py"]
+    command: bash -c "cd app && python -m unittest -v test_my_app"
     volumes:
       - .:/app
+    depends_on:
+      - database
 volumes:
   sklad:
