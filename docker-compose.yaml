@@ -34,5 +34,11 @@ services:
       - .:/app
     depends_on:
       - database
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
 volumes:
   sklad:
