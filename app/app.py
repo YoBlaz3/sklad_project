@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import distinct, desc
 from flask_login import current_user, login_required, LoginManager
+from prometheus_client import Counter, generate_latest, REGISTRY
 import io
 import datetime
 
@@ -41,6 +42,17 @@ app.register_blueprint(book_bp)
 
 init_login_manager(app)
 
+# Define Prometheus metrics
+http_requests_total = Counter('http_requests_total', 'Total number of HTTP requests')
+function_calls_total = Counter('function_calls_total', 'Total number of function calls with labels', labelnames=['endpoint'])
+errors_total = Counter('errors_total', 'Total number of errors with labels', labelnames=['endpoint'])
+
+def increment_function_calls(endpoint):
+    function_calls_total.labels(endpoint=endpoint).inc()
+
+def increment_errors(endpoint):
+    errors_total.labels(endpoint=endpoint).inc()
+
 from models import *
 
 PER_PAGE = 10
@@ -76,12 +88,22 @@ def index():
     if books == []:
         flag = False
     rating=Book.rating
-    return render_template('index.html', books=books, genres=genres, years=years, book_genre=book_genre, pagination=pagination, rating=rating,
-     title=title, genres_list=[int(x) for x in genres_list], years_list=years_list, amount_from=amount_from, amount_to=amount_to, author=author, flag=flag)
-        
-            
+    http_requests_total.inc()  # Increment the HTTP request counter
+    try:
+        # Your existing code for the index function
 
-
+        # Increment the function call counter for the index function
+        increment_function_calls('index')
+        return render_template('index.html', books=books, genres=genres, years=years, book_genre=book_genre, pagination=pagination, rating=rating, title=title, genres_list=[int(x) for x in genres_list], years_list=years_list, amount_from=amount_from, amount_to=amount_to, author=author, flag=flag
+    except Exception as e:
+        # Increment the error counter for the index function
+        increment_errors('index')
+        raise e
+    )
+# Endpoint for Prometheus to scrape metrics
+@app.route('/metrics')
+def metrics():
+    return generate_latest(REGISTRY), 200, {'Content-Type': 'text/plain'}
 
 @app.route('/media/images/<cover_id>')
 def image(cover_id):
