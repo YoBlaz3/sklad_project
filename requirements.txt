@@ -35,3 +35,4 @@ six==1.16.0
 SQLAlchemy==1.4.37
 webencodings==0.5.1
 Werkzeug==2.1.2
+prometheus_client==0.12.0
