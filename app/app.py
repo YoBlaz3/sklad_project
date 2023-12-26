@@ -89,17 +89,8 @@ def index():
         flag = False
     rating=Book.rating
     http_requests_total.inc()  # Increment the HTTP request counter
-    try:
-        # Your existing code for the index function
-
-        # Increment the function call counter for the index function
-        increment_function_calls('index')
-        return render_template('index.html', books=books, genres=genres, years=years, book_genre=book_genre, pagination=pagination, rating=rating, title=title, genres_list=[int(x) for x in genres_list], years_list=years_list, amount_from=amount_from, amount_to=amount_to, author=author, flag=flag
-    except Exception as e:
-        # Increment the error counter for the index function
-        increment_errors('index')
-        raise e
-    )
+    increment_function_calls('index')
+    return render_template('index.html', books=books, genres=genres, years=years, book_genre=book_genre, pagination=pagination, rating=rating, title=title, genres_list=[int(x) for x in genres_list], years_list=years_list, amount_from=amount_from, amount_to=amount_to, author=author, flag=flag)
 # Endpoint for Prometheus to scrape metrics
 @app.route('/metrics')
 def metrics():
